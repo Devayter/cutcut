@@ -1,9 +1,19 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, URLField
-from wtforms.validators import DataRequired, Length, Optional
+from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
 
-from yacut.constants import (CUSTOM_ID_LABLE, CUSTOM_ID_VALIDATOR_LENGTH,
-                             ORIGINAL_LINK_LABLE, ORIGINAL_LINK_VALIDATOR_DATA)
+from yacut.constants import (ALLOWED_SYMBOLS, CUSTOM_URL_LENGHT,
+                             ORIGINAL_URL_LENGTH)
+from yacut.models import URLMap
+
+CUSTOM_ID_LABLE = 'Введите сокращенный вариант'
+CUSTOM_ID_VALIDATOR_LENGTH = 'Длина превышает 16 символов'
+CREATE = 'Создать'
+ORIGINAL_LINK_LABLE = 'Введите оригинальную ссылку'
+ORIGINAL_LINK_VALIDATOR_DATA = 'Обязательное поле'
+SHORT_EXISTS = 'Предложенный вариант короткой ссылки уже существует.'
+UNCORRECT_SYMBOLS = 'Недопустимые символы.'
+UNCORRECT_URL = 'Некорректный URL'
 
 
 class URLMapForm(FlaskForm):
@@ -11,14 +21,20 @@ class URLMapForm(FlaskForm):
         ORIGINAL_LINK_LABLE,
         validators=[
             DataRequired(message=ORIGINAL_LINK_VALIDATOR_DATA),
-            Length(1, 256)
+            Length(max=ORIGINAL_URL_LENGTH),
+            URL(message=UNCORRECT_URL)
         ]
     )
     custom_id = URLField(
         CUSTOM_ID_LABLE,
         validators=[
-            Length(1, 16, message=CUSTOM_ID_VALIDATOR_LENGTH),
-            Optional()
+            Length(max=CUSTOM_URL_LENGHT, message=CUSTOM_ID_VALIDATOR_LENGTH),
+            Optional(),
+            Regexp(f'^[{ALLOWED_SYMBOLS}]+$', message=UNCORRECT_SYMBOLS)
         ]
     )
-    submit = SubmitField('Создать')
+    submit = SubmitField(CREATE)
+
+    def validate_custom_id(self, field):
+        if field and URLMap.query.filter_by(short=field.data).first():
+            field.errors.append(SHORT_EXISTS)
