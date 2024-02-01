@@ -1,7 +1,6 @@
 import random
 import re
 from datetime import datetime as dt
-from http import HTTPStatus
 
 from yacut.constants import (
     ALLOWED_SYMBOLS, CUSTOM_URL_LENGHT, GENERATED_SHORT_LENGTH, MAX_ATTEMPTS,
