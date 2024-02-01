@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from urllib.parse import urljoin
 
 from flask import jsonify, request, url_for
 
@@ -22,11 +23,13 @@ def add_url():
     try:
         url_mapping = URLMap.add_url_mapping(data=data)
     except ValueError as error:
-        return jsonify({'message': str(error)})
+        return jsonify({'message': str(error)}), HTTPStatus.BAD_REQUEST
     return jsonify(
         {
             'url': url_mapping.original,
-            'short_link': url_for(OPEN_LINK, short=url_mapping.short)
+            'short_link': urljoin(
+                request.url_root, url_for(OPEN_LINK, short=url_mapping.short)
+            )
         }
     ), HTTPStatus.CREATED
 
