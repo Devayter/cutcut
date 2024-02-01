@@ -11,6 +11,7 @@ CUSTOM_ID_VALIDATOR_LENGTH = 'Длина превышает 16 символов'
 CREATE = 'Создать'
 ORIGINAL_LINK_LABLE = 'Введите оригинальную ссылку'
 ORIGINAL_LINK_VALIDATOR_DATA = 'Обязательное поле'
+REGEX = f'^[{ALLOWED_SYMBOLS}]+$'
 SHORT_EXISTS = 'Предложенный вариант короткой ссылки уже существует.'
 UNCORRECT_SYMBOLS = 'Недопустимые символы.'
 UNCORRECT_URL = 'Некорректный URL'
@@ -30,11 +31,11 @@ class URLMapForm(FlaskForm):
         validators=[
             Length(max=CUSTOM_URL_LENGHT, message=CUSTOM_ID_VALIDATOR_LENGTH),
             Optional(),
-            Regexp(f'^[{ALLOWED_SYMBOLS}]+$', message=UNCORRECT_SYMBOLS)
+            Regexp(REGEX, message=UNCORRECT_SYMBOLS)
         ]
     )
     submit = SubmitField(CREATE)
 
     def validate_custom_id(self, field):
-        if field and URLMap.query.filter_by(short=field.data).first():
+        if field and URLMap.get_url_mapping(field.data):
             field.errors.append(SHORT_EXISTS)

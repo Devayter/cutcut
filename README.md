@@ -54,17 +54,21 @@ pip install -r requirements.txt
 Flask shell
 ```
 
-Для создания БД поочередно ввести команды
+Создать миграции БД
 
-```shell
->>>from opinions_app import db
+```bash
+flask db init
 ```
 
-```shell
->>> db.create_all()
+```bash
+flask db migrate
 ```
 
-Выйти из интерактивного режима `Ctrl + C` и запустить программу
+```bash
+flask db upgrade
+```
+
+Запустить программу
 
 ```bash
 flask run
@@ -128,6 +132,10 @@ http://localhost/api/id/<short_id>/
 }
 ```
 
+## Ссылка на полную документацию
+
+[Redoc](http://127.0.0.1:5000/redoc)
+
 ## Авторы
 
-* Павел Рябов
+* [Павел Рябов](https://github.com/Devayter/)

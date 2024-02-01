@@ -46,9 +46,13 @@
         <div class="col-sm">
           <p class="text-center">
           <h5 class="text-center">
-            {% if short_url_message %}
-              {% set parts = short_url_message.split(' ') %}
-              {{ parts[:-1]|join(' ') }} <a href="{{ parts[-1] }}" target="_blank">{{ parts[-1] }}</a>
+            {% with messages = get_flashed_messages() %} 
+              {% for message in messages %}
+                {{ message }}
+              {% endfor %}
+            {% endwith %}
+            {% if short%}
+              Ваша новая ссылка готова: <a href="http://localhost{{ short }}" target="_blank">http://localhost{{ short }}</a>
             {% endif %}
           </h5>
           </p>
