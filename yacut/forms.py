@@ -2,8 +2,9 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField, URLField
 from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
 
-from yacut.constants import (ALLOWED_SYMBOLS, CUSTOM_URL_LENGHT,
-                             ORIGINAL_URL_LENGTH)
+from yacut.constants import (
+    ALLOWED_SYMBOLS, CUSTOM_URL_LENGHT, ORIGINAL_URL_LENGTH
+)
 from yacut.models import URLMap
 
 CUSTOM_ID_LABLE = 'Введите сокращенный вариант'

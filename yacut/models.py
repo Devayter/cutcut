@@ -6,7 +6,6 @@ from yacut.constants import (
     ALLOWED_SYMBOLS, CUSTOM_URL_LENGHT, GENERATED_SHORT_LENGTH, MAX_ATTEMPTS,
     ORIGINAL_URL_LENGTH
 )
-
 from . import db
 
 GENARATE_SHORT_ERROR = 'Не удалось сгенерировать короткую ссылку'
