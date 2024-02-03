@@ -29,7 +29,7 @@ def add_url():
     except ValueError as error:
         raise InvalidAPIUsage(str(error), status_code=HTTPStatus.BAD_REQUEST)
     return jsonify(
-        {ç
+        {
             'url': data['url'],
             'short_link': url_for(
                 SHORT_ROUTE, short=short, _external=True
