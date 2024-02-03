@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from flask import redirect, render_template, send_from_directory, url_for
 
-from yacut.constants import OPEN_LINK
+from yacut.constants import SHORT_ROUTE
 from yacut.forms import URLMapForm
 from yacut.models import URLMap
 from . import app
@@ -14,21 +14,23 @@ def index_view():
     if not form.validate_on_submit():
         return render_template('index.html', form=form), HTTPStatus.OK
     try:
-        url_mapping = URLMap.add_url_mapping(template='index.html', form=form)
-    except ValueError:
-        return render_template('index.html', form=form), HTTPStatus.OK
-    if url_mapping:
+        short = URLMap.add_url_mapping(
+            form.original_link.data,
+            (form.custom_id.data if form.custom_id.data
+                else URLMap.generate_short())
+        ).short
         return render_template(
             'index.html',
             form=form,
-            short=url_for(OPEN_LINK, short=url_mapping.short)
+            short=url_for(SHORT_ROUTE, short=short, _external=True)
         ), HTTPStatus.OK
-    return render_template('index.html', form=form), HTTPStatus.OK
+    except ValueError:
+        return render_template('index.html', form=form), HTTPStatus.OK
 
 
 @app.route('/<string:short>', methods=['GET'])
 def open_link(short):
-    return redirect(URLMap.find_original_or_404(short))
+    return redirect(URLMap.get_or_404(short))
 
 
 @app.route('/redoc', methods=['GET'])

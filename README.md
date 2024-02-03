@@ -54,15 +54,7 @@ pip install -r requirements.txt
 Flask shell
 ```
 
-Создать миграции БД
-
-```bash
-flask db init
-```
-
-```bash
-flask db migrate
-```
+Обновить миграции БД
 
 ```bash
 flask db upgrade

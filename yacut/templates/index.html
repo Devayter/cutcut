@@ -52,7 +52,7 @@
               {% endfor %}
             {% endwith %}
             {% if short%}
-              Ваша новая ссылка готова: <a href="http://localhost{{ short }}" target="_blank">http://localhost{{ short }}</a>
+              Ваша новая ссылка готова: <a href="{{ short }}" target="_blank">{{ short }}</a>
             {% endif %}
           </h5>
           </p>
