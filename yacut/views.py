@@ -41,10 +41,10 @@ def index_view():
 
 @app.route('/<string:short>', methods=['GET'])
 def open_link(short):
-    original = URLMap.get(short)
-    if not original:
-        abort(HTTPStatus.NOT_FOUND)
-    return redirect(URLMap.get(short).original)
+    url_mapping = URLMap.get(short)
+    if not url_mapping:
+        return render_template('404.html'), HTTPStatus.NOT_FOUND
+    return redirect(url_mapping.original)
 
 
 @app.route('/redoc', methods=['GET'])

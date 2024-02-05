@@ -29,9 +29,7 @@ def invalid_api_usage(error):
 
 @app.errorhandler(HTTPStatus.NOT_FOUND)
 def page_not_found(error):
-    if 'api' in request.path:
-        return jsonify({'message': UNCORRECT_ID}), HTTPStatus.NOT_FOUND
-    return render_template('404.html'), HTTPStatus.NOT_FOUND
+    return jsonify(error.to_dict()), error.status_code
 
 
 @app.errorhandler(HTTPStatus.INTERNAL_SERVER_ERROR)

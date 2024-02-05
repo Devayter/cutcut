@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 from flask import jsonify, request, url_for
+from werkzeug.exceptions import HTTPException
 
 from yacut.constants import SHORT_ROUTE
 from yacut.error_handlers import InvalidAPIUsage
@@ -10,6 +11,7 @@ from . import app
 NO_DATA = 'Отсутствует тело запроса'
 NO_URL = '"url" является обязательным полем!'
 SHORT_LINK = 'http://localhost{short}'
+UNCORRECT_ID = 'Указанный id не найден'
 
 
 @app.route('/api/id/', methods=['POST'])
@@ -43,4 +45,9 @@ def add_url():
 
 @app.route('/api/id/<string:short_id>/', methods=['GET'])
 def get_original_url(short_id):
-    return jsonify({'url': URLMap.get_or_404(short_id).original})
+    try:
+        return jsonify({'url': URLMap.get_or_404(short_id).original})
+    except HTTPException:
+        raise InvalidAPIUsage(
+            UNCORRECT_ID, status_code=HTTPStatus.NOT_FOUND
+        )
