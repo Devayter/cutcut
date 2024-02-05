@@ -43,7 +43,7 @@ def index_view():
 def open_link(short):
     url_mapping = URLMap.get(short)
     if not url_mapping:
-        return render_template('404.html'), HTTPStatus.NOT_FOUND
+        abort(HTTPStatus.NOT_FOUND)
     return redirect(url_mapping.original)
 
 
