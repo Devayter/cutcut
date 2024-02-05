@@ -48,13 +48,21 @@ python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Запустить интерактивную оболочку Flask
+### Для применения имеющихся миграций
 
 ```bash
-Flask shell
+flask db upgrade
 ```
 
-Обновить миграции БД
+### Для создания новых миграций
+
+```bash
+flask db init
+```
+
+```bash
+flask db migrate
+```
 
 ```bash
 flask db upgrade

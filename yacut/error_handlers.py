@@ -1,8 +1,12 @@
 from http import HTTPStatus
 
-from flask import jsonify, render_template
+from flask import jsonify, render_template, request
 
 from . import app, db
+
+
+UNCORRECT_ID = 'Указанный id не найден'
+API_PATH = '/api/id/'
 
 
 class InvalidAPIUsage(Exception):
@@ -25,6 +29,8 @@ def invalid_api_usage(error):
 
 @app.errorhandler(HTTPStatus.NOT_FOUND)
 def page_not_found(error):
+    if 'api' in request.path:
+        return jsonify({'message': UNCORRECT_ID}), HTTPStatus.NOT_FOUND
     return render_template('404.html'), HTTPStatus.NOT_FOUND
 
 

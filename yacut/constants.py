@@ -1,9 +1,9 @@
 import string
 
 ALLOWED_SYMBOLS = string.ascii_letters + string.digits
-CUSTOM_URL_LENGHT = 16
+SHORT_LENGHT = 16
 GENERATED_SHORT_LENGTH = 6
-ORIGINAL_URL_LENGTH = 256
+ORIGINAL_LENGTH = 512
 MAX_ATTEMPTS = 3
 
 SHORT_ROUTE = 'open_link'

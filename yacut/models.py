@@ -3,30 +3,35 @@ import re
 from datetime import datetime as dt
 
 from yacut.constants import (
-    ALLOWED_SYMBOLS, CUSTOM_URL_LENGHT, GENERATED_SHORT_LENGTH, MAX_ATTEMPTS,
-    ORIGINAL_URL_LENGTH, REGEX
+    ALLOWED_SYMBOLS, SHORT_LENGHT, GENERATED_SHORT_LENGTH, MAX_ATTEMPTS,
+    ORIGINAL_LENGTH, REGEX
 )
 from . import db
 
-GENARATE_SHORT_ERROR = 'Не удалось сгенерировать короткую ссылку'
+GENARATE_SHORT_ERROR = (
+    'Не удалось сгенерировать короткую ссылку, повторите попытку'
+)
+ORIGINAL_LENGTH_ERROR = f'Длина ссылки превышает {ORIGINAL_LENGTH} символов'
 SHORT_EXISTS = 'Предложенный вариант короткой ссылки уже существует.'
 UNCORRECT_NAME = 'Указано недопустимое имя для короткой ссылки'
 
 
 class URLMap(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    original = db.Column(db.String(ORIGINAL_URL_LENGTH))
-    short = db.Column(db.String(CUSTOM_URL_LENGHT), unique=True)
+    original = db.Column(db.String(ORIGINAL_LENGTH))
+    short = db.Column(db.String(SHORT_LENGHT), unique=True)
     timestamp = db.Column(db.DateTime, index=True, default=dt.utcnow)
 
-    def add_url_mapping(original, short):
-        if URLMap.get(short):
-            raise ValueError(SHORT_EXISTS)
-        if not re.match(REGEX, short):
-            raise ValueError(UNCORRECT_NAME)
-        if (len(short) > CUSTOM_URL_LENGHT
-                or not re.match(REGEX, short)):
-            raise ValueError(UNCORRECT_NAME)
+    def add(original, short, need_validate=False):
+        short = URLMap.generate_short() if not short else short
+        if need_validate:
+            if (len(short) > SHORT_LENGHT
+                    or not re.match(REGEX, short)):
+                raise ValueError(UNCORRECT_NAME)
+            if len(original) > ORIGINAL_LENGTH:
+                raise ValueError(ORIGINAL_LENGTH_ERROR)
+            if URLMap.get(short):
+                raise ValueError(SHORT_EXISTS)
         url_mapping = URLMap(
             original=original,
             short=short
@@ -37,7 +42,7 @@ class URLMap(db.Model):
 
     @staticmethod
     def get_or_404(short):
-        return URLMap.query.filter_by(short=short).first_or_404().original
+        return URLMap.query.filter_by(short=short).first_or_404()
 
     @staticmethod
     def get(short):

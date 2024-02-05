@@ -10,7 +10,6 @@ from . import app
 NO_DATA = 'Отсутствует тело запроса'
 NO_URL = '"url" является обязательным полем!'
 SHORT_LINK = 'http://localhost{short}'
-UNCORRECT_ID = 'Указанный id не найден'
 
 
 @app.route('/api/id/', methods=['POST'])
@@ -21,26 +20,27 @@ def add_url():
     if 'url' not in data:
         raise InvalidAPIUsage(NO_URL)
     try:
-        short = URLMap.add_url_mapping(
-            data['url'],
-            (data['custom_id'] if 'custom_id' in data and data['custom_id']
-             else URLMap.generate_short())
-        ).short
+        return jsonify(
+            {
+                'url': data['url'],
+                'short_link': url_for(
+                    SHORT_ROUTE,
+                    short=URLMap.add(
+                        data['url'],
+                        data.get('custom_id'),
+                        need_validate=True
+                    ).short,
+                    _external=True
+                ),
+            }), HTTPStatus.CREATED
     except ValueError as error:
         raise InvalidAPIUsage(str(error), status_code=HTTPStatus.BAD_REQUEST)
-    return jsonify(
-        {
-            'url': data['url'],
-            'short_link': url_for(
-                SHORT_ROUTE, short=short, _external=True
-            )
-        }
-    ), HTTPStatus.CREATED
+    except RuntimeError as error:
+        raise InvalidAPIUsage(
+            str(error), status_code=HTTPStatus.INTERNAL_SERVER_ERROR
+        )
 
 
 @app.route('/api/id/<string:short_id>/', methods=['GET'])
 def get_original_url(short_id):
-    try:
-        return jsonify({'url': URLMap.get(short_id).original})
-    except AttributeError:
-        raise InvalidAPIUsage(UNCORRECT_ID, status_code=HTTPStatus.NOT_FOUND)
+    return jsonify({'url': URLMap.get_or_404(short_id).original})
