@@ -23,13 +23,14 @@ class URLMap(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=dt.utcnow)
 
     def add(original, short, need_validate=False):
+        if need_validate:
+            if len(original) > ORIGINAL_LENGTH:
+                raise ValueError(ORIGINAL_LENGTH_ERROR)
         if short:
             if need_validate:
                 if (len(short) > SHORT_LENGHT
                         or not re.match(REGEX, short)):
                     raise ValueError(UNCORRECT_NAME)
-                if len(original) > ORIGINAL_LENGTH:
-                    raise ValueError(ORIGINAL_LENGTH_ERROR)
                 if URLMap.get(short):
                     raise ValueError(SHORT_EXISTS)
         else:
