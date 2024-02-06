@@ -26,15 +26,15 @@ class URLMap(db.Model):
         if need_validate:
             if len(original) > ORIGINAL_LENGTH:
                 raise ValueError(ORIGINAL_LENGTH_ERROR)
-        if short:
-            if need_validate:
+            if short:
+                if len(original) > ORIGINAL_LENGTH:
+                    raise ValueError(ORIGINAL_LENGTH_ERROR)
                 if (len(short) > SHORT_LENGHT
                         or not re.match(REGEX, short)):
                     raise ValueError(UNCORRECT_NAME)
                 if URLMap.get(short):
                     raise ValueError(SHORT_EXISTS)
-        else:
-            short = URLMap.generate_short()
+        short = short or URLMap.generate_short()
         url_mapping = URLMap(
             original=original,
             short=short
