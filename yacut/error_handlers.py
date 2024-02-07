@@ -5,9 +5,6 @@ from flask import jsonify, render_template
 from . import app, db
 
 
-UNCORRECT_ID = 'Указанный id не найден'
-
-
 class InvalidAPIUsage(Exception):
     status_code = HTTPStatus.BAD_REQUEST
 
