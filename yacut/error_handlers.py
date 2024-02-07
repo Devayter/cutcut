@@ -6,7 +6,6 @@ from . import app, db
 
 
 UNCORRECT_ID = 'Указанный id не найден'
-API_PATH = '/api/id/'
 
 
 class InvalidAPIUsage(Exception):
