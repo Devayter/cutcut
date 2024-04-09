@@ -3,9 +3,9 @@ from http import HTTPStatus
 from flask import (
     abort, flash, redirect, render_template, send_from_directory, url_for
 )
-from yacut.constants import SHORT_ROUTE
-from yacut.forms import URLMapForm
-from yacut.models import URLMap
+from cutcut.constants import SHORT_ROUTE
+from cutcut.forms import URLMapForm
+from cutcut.models import URLMap
 from . import app
 
 SHORT_DOES_NOT_EXIST = 'Короткая ссылка {short} не существует'

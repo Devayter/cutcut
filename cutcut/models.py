@@ -2,7 +2,7 @@ import random
 import re
 from datetime import datetime as dt
 
-from yacut.constants import (
+from cutcut.constants import (
     ALLOWED_SYMBOLS, SHORT_LENGHT, GENERATED_SHORT_LENGTH, MAX_ATTEMPTS,
     ORIGINAL_LENGTH, REGEX
 )

@@ -3,9 +3,9 @@ from http import HTTPStatus
 from flask import jsonify, request, url_for
 from werkzeug.exceptions import HTTPException
 
-from yacut.constants import SHORT_ROUTE
-from yacut.error_handlers import InvalidAPIUsage
-from yacut.models import URLMap
+from cutcut.constants import SHORT_ROUTE
+from cutcut.error_handlers import InvalidAPIUsage
+from cutcut.models import URLMap
 from . import app
 
 NO_DATA = 'Отсутствует тело запроса'
