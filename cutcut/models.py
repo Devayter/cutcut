@@ -27,8 +27,6 @@ class URLMap(db.Model):
             if len(original) > ORIGINAL_LENGTH:
                 raise ValueError(ORIGINAL_LENGTH_ERROR)
             if short:
-                if len(original) > ORIGINAL_LENGTH:
-                    raise ValueError(ORIGINAL_LENGTH_ERROR)
                 if (len(short) > SHORT_LENGHT
                         or not re.match(REGEX, short)):
                     raise ValueError(UNCORRECT_NAME)
